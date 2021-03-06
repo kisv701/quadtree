@@ -41,15 +41,14 @@ def draw_query_result(ax, qt, bottomLeft, topRight):
   x2 = topRight.x
   y1 = bottomLeft.y
   y2 = topRight.y
-  ax.plot([x1, x2], [y1, y1], '-g')
+  ax.plot([x1, x2], [y1, y1], '-g', label="Query boundary")
   ax.plot([x1, x2], [y2, y2], '-g')
   ax.plot([x1, x1], [y1, y2], '-g')
   ax.plot([x2, x2], [y1, y2], '-g')
 
   points_in_rect = qt.get_points_in_rect(bottomLeft=bottomLeft, topRight=topRight)
 
-  for p in points_in_rect:
-    ax.plot(p.x, p.y, '*g')
+  ax.plot([p.x for p in points_in_rect], [p.y for p in points_in_rect], '*g', label="Selected Points")
 
 
 if __name__ == '__main__':
@@ -66,7 +65,7 @@ if __name__ == '__main__':
       points.append(Point(x + rx, y + ry))
   
   fig, ax = plt.subplots()  #create figure and axes
-  ax.plot([p.x for p in points], [p.y for p in points], '.') # Plot points
+  ax.plot([p.x for p in points], [p.y for p in points], '.', label="Points") # Plot points
 
   # Add points to quadtree
   for p in points:
@@ -74,5 +73,6 @@ if __name__ == '__main__':
   
   # Plot the quadtree
   draw_quadtree(ax, qt)
-  draw_query_result(ax, qt, Point(-151, -137), Point(-23, -52))
+  draw_query_result(ax, qt, Point(-23, -48), Point(33, -8))
+  plt.legend()
   plt.show()
