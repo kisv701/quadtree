@@ -1,7 +1,11 @@
 # Quadtree 
 
 Python quadtree implementation written as a learning exercise. It should not be taken too seriously and the whole implementation is self contained within 1 file.
-If you for any want a python implementation of a Quadtree, feel free to copy and paste quadtree.py into your project.
+If you for any reason want a python implementation of a Quadtree, feel free to copy and paste quadtree.py into your project. 
+
+A quadtree should allow you to answer a query like 
+*Get me all the points within this region*
+in log(n) time, here's the wikipedia (https://en.wikipedia.org/wiki/Quadtree).
 
 The result could look something like this, where an area between -100 to 100 in x and -100 to 100 in y is covered by a quadtree. The tree has then been queried with a request to get all points within the greem rectangle.
 
