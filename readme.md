@@ -3,7 +3,7 @@
 Python quadtree implementation written as a learning exercise. It should not be taken too seriously and the whole implementation is self contained within 1 file.
 So if you for any want a python implementation of a Quadtree, feel free to copy and paste quadtree.py into your project.
 
-[rect query plot](img/quadtree_rect_query_plot.png)
+![rect query plot](img/quadtree_rect_query_plot.png?raw=true)
 
 
 The whole implementation is in the quadtree/quadtee.py file.
