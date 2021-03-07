@@ -6,6 +6,13 @@ def is_point_in_rect(point, bottomLeft, topRight):
          point.y > bottomLeft.y and \
          point.y < topRight.y
 
+def is_point_in_circle(point, circle):
+  dst_x = point.x - circle.x
+  dst_y = point.y - circle.y
+
+  # Pythagoras to check distance between circle and line to check against.
+  return dst_x * dst_x + dst_y * dst_y < circle.value * circle.value
+
 # Class for holding a data point
 class Point:
   def __init__(self, x, y, value = None):
@@ -87,6 +94,29 @@ class QuadTree:
 
     return result
 
+  def get_points_in_circle(self, circle):
+    
+    # If the rect is does not overlap this quad we can't find any points
+    if not self.is_overlapping_circle(circle):
+      return []
+
+    result = [] # All the points in the rectangle
+    
+    if self.is_leaf():
+      # If we are a leaf node add all the points that fit in the rect
+      for p in self.points:
+        if is_point_in_circle(p, circle):
+          result.append(p)
+    
+    else:
+      # If we are not a leaf node, add points from all children
+      result.extend(self.northWest.get_points_in_circle(circle))
+      result.extend(self.northEast.get_points_in_circle(circle))
+      result.extend(self.southWest.get_points_in_circle(circle))
+      result.extend(self.southEast.get_points_in_circle(circle))
+
+    return result
+
   def is_overlapping(self, bottomLeft, topRight):
     
     # If one is rectangle is to the right of the other they cant overlap
@@ -101,6 +131,33 @@ class QuadTree:
     # so they must overlap
     return True
 
+  def is_overlapping_circle(self, circle):
+    # Given a circle, represented by a Point where value is the radius,
+    # check if it is overlapping self.
+
+    test_x = circle.x
+    test_y = circle.y
+    
+    # If the circle is left of the rect, test left edge of rect
+    if circle.x < self.bottomLeft.x:
+      test_x = self.bottomLeft.x
+
+    # If the circle is right of the rect, test right edge of rect
+    elif circle.x > self.topRight.x:
+      test_x = self.topRight.x
+    
+    # If the circle is below the rect, test bottom edge.
+    if circle.y < self.bottomLeft.y:
+      test_y = self.bottomLeft.y
+    elif circle.y > self.topRight.y:
+      test_y = self.topRight.y
+    
+    dst_x = test_x - circle.x
+    dst_y = test_y - circle.y
+
+    # Pythagoras to check distance between circle and line to check against.
+    return dst_x * dst_x + dst_y * dst_y <= circle.value * circle.value
+
   def split(self):
     x_low = self.bottomLeft.x
     y_low = self.bottomLeft.y
@@ -112,8 +169,6 @@ class QuadTree:
     self.northEast = QuadTree(capacity=self.capacity, bottomLeft=Point(x_mid, y_mid), topRight=Point(x_high, y_high))
     self.southWest = QuadTree(capacity=self.capacity, bottomLeft=Point(x_low, y_low), topRight=Point(x_mid, y_mid))
     self.southEast = QuadTree(capacity=self.capacity, bottomLeft=Point(x_mid, y_low), topRight=Point(x_high, y_mid))
-
-
 
   def is_leaf(self):
     return self.northWest is None and \
